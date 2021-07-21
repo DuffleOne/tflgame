@@ -70,6 +70,13 @@ func New(app *app.App, l *logrus.Logger, internalKeys []string, rateLimit *Limit
 	mux.Post(r.route("/explain_score", r.ExplainScore, ExplainScoreSchema, JWTAuth))
 	mux.Post(r.route("/get_leaderboard", r.GetLeaderboard, nil, UnsafeNoAuth))
 
+	mux.Options("/*", func(res http.ResponseWriter, req *http.Request) {
+		res.Header().Set("Access-Control-Allow-Origin", "*")
+		res.Header().Set("Access-Control-Allow-Headers", "*")
+		res.Header().Set("Access-Control-Request-Headers", "*")
+		res.Header().Set("Access-Control-Allow-Methods", "POST")
+	})
+
 	r.httpServer = &http.Server{Handler: mux}
 
 	return r
